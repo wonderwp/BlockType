@@ -2,50 +2,47 @@
 
 namespace WonderWp\Component\BlockType\Service;
 
-use WonderWp\Component\BlockType\BlockTypeInterface;
+use WonderWp\Component\BlockType\Definition\BlockTypeInterface;
 use WonderWp\Component\BlockType\Exception\BlockTypeRegistrationException;
 use WonderWp\Component\BlockType\Response\BlockTypeRegistrationResponse;
+use WonderWp\Component\PluginSkeleton\ManagerAwareTrait;
 
-class BlockTypeService implements BlockTypeServiceInterface
+class BlockTypeService extends AbstractBlockTypeService
 {
-    /**
-     * @param BlockTypeDefinition $definition
-     * @return BlockTypeRegistrationResponse
-     * @throws BlockTypeRegistrationException
-     */
-    public function register(BlockTypeInterface $definition)
+    use ManagerAwareTrait;
+
+    public function register()
     {
-        try {
-            if (!function_exists('register_block_type')) {
-                throw new BlockTypeRegistrationException('Function register_block_type does not exist');
-            }
-
-            $result = register_block_type($definition->getName(), $definition->getArgs());
-
-            if (!$result) {
-                throw new BlockTypeRegistrationException('Failed to register block type');
-            }
-
-            return new BlockTypeRegistrationResponse(true, 'Block type registered successfully', $result);
-        } catch (\Exception $e) {
-            throw new BlockTypeRegistrationException($e->getMessage(), $e->getCode(), $e);
-        }
+        add_action('init', function(){
+            $autoLoaded = $this->autoload();
+        },9);
     }
 
-    /**
-     * @param string $blockName
-     * @return BlockTypeRegistrationResponse
-     */
-    public function unregister($blockName)
+    public function autoload(array $classNameFromFiles = [], array $discoveryPaths = [], callable $successCallback = null, array $excludedClasses=[]): array
     {
-        if (function_exists('unregister_block_type')) {
-            $result = unregister_block_type($blockName);
-            return new BlockTypeRegistrationResponse(
-                $result !== false,
-                $result !== false ? 'Block type unregistered successfully' : 'Failed to unregister block type'
-            );
+        $discoveryPathsRoots = $this->manager->getConfig('discoveryPathsRoots', [
+            'block-types' => rtrim($this->manager->getConfig('path.root'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR
+        ]);
+        $discoverFolderSuffix = $this->manager->getConfig('cptservice.discoverFolderSuffix', 'BlockTypes');
+        $defaultPaths = $this->deductDefaultDiscoveryPaths($discoveryPathsRoots, $discoverFolderSuffix);
+        $discoveryPaths = array_merge($defaultPaths, $discoveryPaths);
+
+        $autoLoaded = parent::autoload($classNameFromFiles, $discoveryPaths, $successCallback);
+
+        if (!empty($this->blockTypes)) {
+            $this->registerBlockTypes();
         }
 
-        return new BlockTypeRegistrationResponse(false, 'Function unregister_block_type does not exist');
+        return $autoLoaded;
     }
+
+    protected function autoloadFile(string $className, string $filePath): object
+    {
+        $instance = parent::autoloadFile($className, $filePath);
+
+        $this->addBlockType($instance);
+
+        return $instance;
+    }
+
 }

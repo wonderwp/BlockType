@@ -1,35 +1,35 @@
 <?php
 
-namespace WonderWp\Component\BlockType;
+namespace WonderWp\Component\BlockType\Definition;
 
 abstract class AbstractBlockType implements BlockTypeInterface
 {
     /** @var string */
-    protected string $name;
+    protected string $key;
 
     /** @var array */
     protected array $args = [];
 
     /**
-     * @param string $name
+     * @param string $key
      * @param array $args
      */
-    public function __construct(string $name, array $args = [])
+    public function __construct(string $key, array $args = [])
     {
-        $this->name = $name;
+        $this->key = $key;
         $this->args = $args;
     }
 
     /** @inerhitDoc */
-    public function getName(): string
+    public function getKey(): string
     {
-        return $this->name;
+        return $this->key;
     }
 
     /** @inerhitDoc */
-    public function setName(string $name): AbstractBlockType
+    public function setKey(string $key): static
     {
-        $this->name = $name;
+        $this->key = $key;
         return $this;
     }
 
@@ -40,7 +40,7 @@ abstract class AbstractBlockType implements BlockTypeInterface
     }
 
     /** @inerhitDoc */
-    public function setArgs(array $args): AbstractBlockType
+    public function setArgs(array $args): static
     {
         $this->args = $args;
         return $this;

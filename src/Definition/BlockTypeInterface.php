@@ -1,6 +1,6 @@
 <?php
 
-namespace WonderWp\Component\BlockType;
+namespace WonderWp\Component\BlockType\Definition;
 
 interface BlockTypeInterface
 {
