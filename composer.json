@@ -1,0 +1,22 @@
+{
+    "name": "wonderwp/block-type",
+    "description": "WonderWp Block Type Component",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jeremy Desvaux",
+            "email": "jeremy.desvaux@wonderful.fr"
+        }
+    ],
+    "require": {
+        "php": ">=8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "WonderWp\\Component\\BlockType\\": "src"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
