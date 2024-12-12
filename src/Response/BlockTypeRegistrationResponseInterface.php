@@ -4,6 +4,6 @@ namespace WonderWp\Component\BlockType\Response;
 
 interface BlockTypeRegistrationResponseInterface
 {
-    const SUCCESS = 'Taxonomy.registration.success';
-    const ERROR   = 'Taxonomy.registration.error';
-} 
+    const SUCCESS = 'BlockType.registration.success';
+    const ERROR   = 'BlockType.registration.error';
+}
