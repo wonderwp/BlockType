@@ -21,7 +21,7 @@ class BlockTypeService extends AbstractBlockTypeService
     public function autoload(array $classNameFromFiles = [], array $discoveryPaths = [], callable $successCallback = null, array $excludedClasses=[]): array
     {
         $discoveryPathsRoots = $this->manager->getConfig('discoveryPathsRoots', [
-            'block-types' => rtrim($this->manager->getConfig('path.root'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR
+            'block-types' => rtrim($this->manager->getConfig('path.root') ?? '', DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR
         ]);
         $discoverFolderSuffix = $this->manager->getConfig('cptservice.discoverFolderSuffix', 'BlockTypes');
         $defaultPaths = $this->deductDefaultDiscoveryPaths($discoveryPathsRoots, $discoverFolderSuffix);
