@@ -40,7 +40,9 @@ class BlockTypeService extends AbstractBlockTypeService
     {
         $instance = parent::autoloadFile($className, $filePath);
 
-        $this->addBlockType($instance);
+        if($instance instanceof BlockTypeInterface) {
+            $this->addBlockType($instance);
+        }
 
         return $instance;
     }
