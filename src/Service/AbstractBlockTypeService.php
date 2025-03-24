@@ -75,6 +75,9 @@ abstract class AbstractBlockTypeService extends AbstractService implements Block
             $blocksOutputDir .= DIRECTORY_SEPARATOR . $blockType->getKey();
 
             $wpRes = \register_block_type($blocksOutputDir, $blockType->getArgs());
+            if (!$wpRes) {
+                $wpRes = null;
+            }
 
             if ($wpRes instanceof \WP_Error) {
                 throw new BlockTypeRegistrationException($wpRes->get_error_message(), $wpRes->get_error_code());
