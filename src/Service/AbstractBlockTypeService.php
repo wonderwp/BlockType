@@ -64,13 +64,7 @@ abstract class AbstractBlockTypeService extends AbstractService implements Block
     public function registerBlockType(BlockTypeInterface $blockType): BlockTypeRegistrationResponseInterface
     {
         try {
-            $blocksOutputDir = $this->manager->getConfig('path.blocks.build');
-            if (empty($blocksOutputDir)) {
-                $blocksOutputDir = $this->manager->getConfig('path.root') . DIRECTORY_SEPARATOR . 'build';
-                if (is_dir($blocksOutputDir . DIRECTORY_SEPARATOR . 'blocks')) {
-                    $blocksOutputDir = $blocksOutputDir . DIRECTORY_SEPARATOR . 'blocks';
-                }
-            }
+            $blocksOutputDir = $this->getBlocksOutputDir();
 
             $blocksOutputDir .= DIRECTORY_SEPARATOR . $blockType->getKey();
 
@@ -92,6 +86,21 @@ abstract class AbstractBlockTypeService extends AbstractService implements Block
         }
 
         return $response;
+    }
+
+    /**
+     * @return array|mixed|string|null
+     */
+    protected function getBlocksOutputDir(): mixed
+    {
+        $blocksOutputDir = $this->manager->getConfig('path.blocks.build');
+        if (empty($blocksOutputDir)) {
+            $blocksOutputDir = $this->manager->getConfig('path.root') . DIRECTORY_SEPARATOR . 'build';
+            if (is_dir($blocksOutputDir . DIRECTORY_SEPARATOR . 'blocks')) {
+                $blocksOutputDir = $blocksOutputDir . DIRECTORY_SEPARATOR . 'blocks';
+            }
+        }
+        return $blocksOutputDir;
     }
 
 

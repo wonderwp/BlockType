@@ -56,8 +56,8 @@ class BlockTypeService extends AbstractBlockTypeService
             return;
         }
 
-        $manifestFolder =  $this->manager->getConfig('blocks.build.path');
-        if(empty($manifestFolder) || !is_dir($manifestFolder)) {
+        $blocksOutputDir =  $this->getBlocksOutputDir();
+        if(empty($blocksOutputDir) || !is_dir($blocksOutputDir)) {
             return;
         }
 
@@ -69,7 +69,7 @@ class BlockTypeService extends AbstractBlockTypeService
          * @see https://make.wordpress.org/core/2025/03/13/more-efficient-block-type-registration-in-6-8/
          */
         if ( function_exists( 'wp_register_block_types_from_metadata_collection' ) ) {
-            wp_register_block_types_from_metadata_collection( $manifestFolder, $manifestFilePath );
+            wp_register_block_types_from_metadata_collection( $blocksOutputDir, $manifestFilePath );
             return;
         }
 
@@ -80,7 +80,7 @@ class BlockTypeService extends AbstractBlockTypeService
          * @see https://make.wordpress.org/core/2024/10/17/new-block-type-registration-apis-to-improve-performance-in-wordpress-6-7/
          */
         if ( function_exists( 'wp_register_block_metadata_collection' ) ) {
-            wp_register_block_metadata_collection( $manifestFolder, $manifestFilePath );
+            wp_register_block_metadata_collection( $blocksOutputDir, $manifestFilePath );
         }
         /**
          * Registers the block type(s) in the `blocks-manifest.php` file.
@@ -89,7 +89,7 @@ class BlockTypeService extends AbstractBlockTypeService
          */
         $manifest_data = require __DIR__ . '/build/blocks/blocks-manifest.php';
         foreach ( array_keys( $manifest_data ) as $block_type ) {
-            register_block_type( dirname($manifestFolder) . "/{$block_type}" );
+            register_block_type( dirname($blocksOutputDir) . "/{$block_type}" );
         }
     }
 }
