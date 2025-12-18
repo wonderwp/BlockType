@@ -7,9 +7,15 @@ use WonderWp\Component\BlockType\Exception\BlockTypeRegistrationException;
 use WonderWp\Component\BlockType\Response\BlockTypeRegistrationResponse;
 use WonderWp\Component\BlockType\Response\BlockTypeRegistrationResponseInterface;
 use WonderWp\Component\Service\AbstractService;
+use WonderWp\Component\Service\Traits\HasAutoloadingCapabilities;
+use WonderWp\Component\BlockType\Traits\HasBlockTypeAutoloader;
 
 abstract class AbstractBlockTypeService extends AbstractService implements BlockTypeServiceInterface
 {
+    use HasAutoloadingCapabilities, HasBlockTypeAutoloader {
+        HasBlockTypeAutoloader::resolveDiscoveryPaths insteadof HasAutoloadingCapabilities;
+        HasBlockTypeAutoloader::afterAutoload insteadof HasAutoloadingCapabilities;
+    }
     /** @var BlockTypeInterface[] */
     protected array $blockTypes = [];
 
